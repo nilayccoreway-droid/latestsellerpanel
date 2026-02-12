@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  /* Primary button styles with brand color */
+  .btn-primary {
+    @apply bg-brand text-white px-4 py-2 rounded-lg hover:bg-brand-hover transition-colors;
+  }
+  
+  /* Secondary button styles */
+  .btn-secondary {
+    @apply border border-brand text-brand px-4 py-2 rounded-lg hover:bg-brand hover:text-white transition-colors;
+  }
+}
+
+@layer utilities {
+  /* Brand color utilities */
+  .bg-brand {
+    background-color: #00666B;
+  }
+  
+  .bg-brand-light {
+    background-color: #008A91;
+  }
+  
+  .bg-brand-hover {
+    background-color: #00999F;
+  }
+  
+  .text-brand {
+    color: #00666B;
+  }
+  
+  .border-brand {
+    border-color: #00666B;
+  }
+  
+  .hover\:bg-brand:hover {
+    background-color: #00666B;
+  }
+  
+  .hover\:bg-brand-hover:hover {
+    background-color: #00999F;
+  }
+  
+  .hover\:text-brand:hover {
+    color: #00666B;
+  }
+}
+
+@layer base {
+  /* Apply brand color to links */
+  a:not(.no-brand) {
+    color: #00666B;
+  }
+  
+  a:not(.no-brand):hover {
+    color: #00999F;
+  }
+}
