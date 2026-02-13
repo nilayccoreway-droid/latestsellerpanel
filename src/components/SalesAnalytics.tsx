@@ -150,7 +150,7 @@ export default function SalesAnalytics({ salesData }: SalesAnalyticsProps) {
                       style={{
                         height: `${height}px`,
                         minHeight: '12px',
-                        backgroundColor: barColor,
+                        background: 'linear-gradient(to top, #00666B, #00999F)',
                         boxShadow: `0 -2px 8px ${barColor}40`
                       }}
                     />
