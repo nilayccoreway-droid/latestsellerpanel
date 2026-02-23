@@ -1,7 +1,7 @@
 import { CheckCircle } from 'lucide-react';
 import { useState } from 'react';
 
-export type TabType = 'my-business' | 'products' | 'orders' | 'payments' | 'report' | 'photoshoot';
+export type TabType = 'my-business' | 'products' | 'orders' | 'payments' | 'report' | 'marketing';
 
 interface Tab {
   id: TabType;
@@ -12,7 +12,7 @@ interface Tab {
 }
 
 interface TabNavigationProps {
-  activeTab: TabType;
+  activeTab: TabType | null;
   onTabChange: (tab: TabType) => void;
   tabs: Tab[];
 }
@@ -21,7 +21,7 @@ export default function TabNavigation({ activeTab, onTabChange, tabs }: TabNavig
   const [hoveredTab, setHoveredTab] = useState<TabType | null>(null);
 
   return (
-    <div className="bg-gray-100 px-4 py-3">
+    <div className="bg-gray-100 px-4 py-3 sticky top-14 z-40">
       <div className="flex gap-3">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
@@ -33,11 +33,10 @@ export default function TabNavigation({ activeTab, onTabChange, tabs }: TabNavig
               onClick={() => onTabChange(tab.id)}
               onMouseEnter={() => setHoveredTab(tab.id)}
               onMouseLeave={() => setHoveredTab(null)}
-              className={`flex-1 px-6 py-4 text-left transition-all ${
-                isActive
-                  ? 'bg-white shadow-sm border-x border-b border-gray-200 border-t-[3px] rounded-tl-[15px] rounded-tr-[15px]'
-                  : 'bg-gray-50 border border-gray-200 rounded-tl-[15px] rounded-tr-[15px] hover:bg-white hover:shadow-sm hover:border-t-[3px] hover:border-x hover:border-b hover:border-gray-200'
-              }`}
+              className={`flex-1 px-6 py-4 text-left transition-all ${isActive
+                ? 'bg-white shadow-sm border-x border-b border-gray-200 border-t-[3px] rounded-tl-[15px] rounded-tr-[15px]'
+                : 'bg-gray-50 border border-gray-200 rounded-tl-[15px] rounded-tr-[15px] hover:bg-white hover:shadow-sm hover:border-t-[3px] hover:border-x hover:border-b hover:border-gray-200'
+                }`}
               style={(isActive || isHovered) ? { borderTopColor: '#00666B' } : {}}
             >
               <div className="text-sm font-semibold mb-1" style={{ color: '#00666B' }}>{tab.title}</div>

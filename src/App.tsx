@@ -9,9 +9,11 @@ import ProductActionBar from './components/ProductActionBar';
 import OrderWidget from './components/OrderWidget';
 import ProductManagementPage from './components/ProductManagementPage';
 import Sidebar from './components/Sidebar';
+import RightPanel from './components/RightPanel';
 import OrdersPage from './components/OrdersPage';
 import PaymentsPage from './components/PaymentsPage';
 import ReportsPage from './components/ReportsPage';
+import MarketingPage from './components/MarketingPage';
 import PhotoshootPage from './components/PhotoshootPage';
 import TodayPickupTable from './components/TodayPickupTable';
 import Orders from './components/Orders';
@@ -71,7 +73,7 @@ function App() {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeMenu, setActiveMenu] = useState<MenuItem>('dashboard');
-  const [activeTab, setActiveTab] = useState<TabType>('my-business');
+  const [activeTab, setActiveTab] = useState<TabType | null>('my-business');
   const [showOrders, setShowOrders] = useState(false);
   const [showTransactions, setShowTransactions] = useState(false);
   const [showCreditCard, setShowCreditCard] = useState(false);
@@ -94,6 +96,10 @@ function App() {
   const [selectedQuoteId, setSelectedQuoteId] = useState<string | null>(null);
   const [showManageAdvertisement, setShowManageAdvertisement] = useState(false);
   const [editingAdBlockId, setEditingAdBlockId] = useState<number | null>(null);
+  const [showNotificationPanel, setShowNotificationPanel] = useState(false);
+  const [showActionsPopup, setShowActionsPopup] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [showPhotoshoot, setShowPhotoshoot] = useState(false);
 
   useEffect(() => {
     fetchDashboardData();
@@ -193,16 +199,26 @@ function App() {
     { id: 'orders' as TabType, title: 'Orders', subtitle: 'Open Orders', value: '--' },
     { id: 'payments' as TabType, title: 'Payments', subtitle: 'Proceeds (06/02-Today)', value: '¥0' },
     { id: 'report' as TabType, title: 'Report', subtitle: 'Monthly Report', value: '--' },
-    { id: 'photoshoot' as TabType, title: 'Photoshoot', subtitle: 'Scheduled', value: '--' },
+    { id: 'marketing' as TabType, title: 'Marketing', subtitle: 'Campaigns & Ads', value: '--' },
   ];
 
   return (
     <div className="min-h-screen bg-[#EAEDED]">
+      {/* Right-side notification panel */}
+      <RightPanel
+        isOpen={showNotificationPanel}
+        onClose={() => setShowNotificationPanel(false)}
+      />
+
       <Header
         activeMenu={activeMenu}
         onMenuChange={setActiveMenu}
-        onManageProducts={() => setActiveTab('products')}
+        onOpenNotificationPanel={() => setShowNotificationPanel(true)}
+        onManageProducts={() => {
+          setActiveTab('products');
+        }}
         onManageReturn={() => {
+          setActiveTab('orders');
           setShowManageReturns(true);
           setShowBulkPrice(false);
           setShowBulkQty(false);
@@ -218,6 +234,7 @@ function App() {
           setEditingAdBlockId(null);
         }}
         onSellingFees={() => {
+          setActiveTab(null);
           setShowSellingFees(true);
           setShowManageReturns(false);
           setShowBulkPrice(false);
@@ -233,6 +250,7 @@ function App() {
           setEditingAdBlockId(null);
         }}
         onManageSubAccount={() => {
+          setActiveTab(null);
           setShowManageSubAccount(true);
           setShowManageReturns(false);
           setShowBulkPrice(false);
@@ -248,6 +266,7 @@ function App() {
           setEditingAdBlockId(null);
         }}
         onProductImport={() => {
+          setActiveTab('products');
           setShowProductImport(true);
           setShowManageReturns(false);
           setShowBulkPrice(false);
@@ -263,6 +282,7 @@ function App() {
           setEditingAdBlockId(null);
         }}
         onProductExport={() => {
+          setActiveTab('products');
           setShowProductExport(true);
           setShowManageReturns(false);
           setShowBulkPrice(false);
@@ -278,6 +298,7 @@ function App() {
           setEditingAdBlockId(null);
         }}
         onManageRequestForQuote={() => {
+          setActiveTab(null);
           setShowManageRequestForQuote(true);
           setShowManageReturns(false);
           setShowBulkPrice(false);
@@ -293,6 +314,7 @@ function App() {
           setEditingAdBlockId(null);
         }}
         onManageAdvertisement={() => {
+          setActiveTab(null);
           setShowManageAdvertisement(true);
           setShowManageRequestForQuote(false);
           setShowManageReturns(false);
@@ -308,6 +330,7 @@ function App() {
           setEditingAdBlockId(null);
         }}
         onBulkPrice={() => {
+          setActiveTab('products');
           setShowBulkPrice(true);
           setShowBulkQty(false);
           setShowManageAdvertisement(false);
@@ -323,6 +346,7 @@ function App() {
           setEditingAdBlockId(null);
         }}
         onBulkQty={() => {
+          setActiveTab('products');
           setShowBulkQty(true);
           setShowBulkPrice(false);
           setShowManageAdvertisement(false);
@@ -338,6 +362,7 @@ function App() {
           setEditingAdBlockId(null);
         }}
         onManageOrders={() => {
+          setActiveTab('orders');
           setShowOrders(true);
           setShowTransactions(false);
           setShowCreditCard(false);
@@ -362,6 +387,7 @@ function App() {
           setEditingAdBlockId(null);
         }}
         onManagePayments={() => {
+          setActiveTab('payments');
           setShowOrders(false);
           setShowTransactions(true);
           setShowCreditCard(false);
@@ -386,6 +412,7 @@ function App() {
           setEditingAdBlockId(null);
         }}
         onManageCreditCard={() => {
+          setActiveTab('payments');
           setShowOrders(false);
           setShowTransactions(false);
           setShowCreditCard(true);
@@ -410,6 +437,7 @@ function App() {
           setEditingAdBlockId(null);
         }}
         onFeedbacks={() => {
+          setActiveTab('products');
           setShowOrders(false);
           setShowTransactions(false);
           setShowCreditCard(false);
@@ -434,6 +462,7 @@ function App() {
           setEditingAdBlockId(null);
         }}
         onSupport={() => {
+          setActiveTab(null);
           setShowOrders(false);
           setShowTransactions(false);
           setShowCreditCard(false);
@@ -458,6 +487,7 @@ function App() {
           setEditingAdBlockId(null);
         }}
         onHelp={() => {
+          setActiveTab(null);
           setShowOrders(false);
           setShowTransactions(false);
           setShowCreditCard(false);
@@ -482,6 +512,7 @@ function App() {
           setEditingAdBlockId(null);
         }}
         onMembership={() => {
+          setActiveTab(null);
           setShowOrders(false);
           setShowTransactions(false);
           setShowCreditCard(false);
@@ -506,6 +537,7 @@ function App() {
           setEditingAdBlockId(null);
         }}
         onPromotion={() => {
+          setActiveTab(null);
           setShowOrders(false);
           setShowTransactions(false);
           setShowCreditCard(false);
@@ -530,6 +562,7 @@ function App() {
           setEditingAdBlockId(null);
         }}
         onSettings={() => {
+          setActiveTab(null);
           setShowOrders(false);
           setShowTransactions(false);
           setShowCreditCard(false);
@@ -552,6 +585,13 @@ function App() {
           setSelectedQuoteId(null);
           setShowManageAdvertisement(false);
           setEditingAdBlockId(null);
+        }}
+        onReport={() => {
+          setActiveTab('report');
+        }}
+        onPhotoshoot={() => {
+          setActiveTab(null);
+          setShowPhotoshoot(true);
         }}
       />
 
@@ -583,14 +623,179 @@ function App() {
           setSelectedQuoteId(null);
           setShowManageAdvertisement(false);
           setEditingAdBlockId(null);
+          setShowPhotoshoot(false);
         }}
         tabs={tabs}
       />
 
-      <main className="flex h-[calc(100vh-120px)]">
-        <Sidebar />
+      <main className="flex relative">
+        {/* Sidebar — manages its own open/collapsed rendering */}
+        <Sidebar
+          isOpen={sidebarOpen}
+          onToggle={() => setSidebarOpen(!sidebarOpen)}
+          onManageProducts={() => {
+            setActiveTab('products');
+          }}
+          onManageReturn={() => {
+            setActiveTab('orders');
+            setShowManageReturns(true);
+            setShowBulkPrice(false); setShowBulkQty(false); setSelectedReturnId(null);
+            setShowSellingFees(false); setShowManageSubAccount(false); setEditingSubAccount(null);
+            setShowProductImport(false); setShowProductExport(false);
+            setShowManageRequestForQuote(false); setSelectedQuoteId(null);
+            setShowManageAdvertisement(false); setEditingAdBlockId(null);
+          }}
+          onSellingFees={() => {
+            setActiveTab(null);
+            setShowSellingFees(true);
+            setShowManageReturns(false); setShowBulkPrice(false); setShowBulkQty(false); setSelectedReturnId(null);
+            setShowManageSubAccount(false); setEditingSubAccount(null);
+            setShowProductImport(false); setShowProductExport(false);
+            setShowManageRequestForQuote(false); setSelectedQuoteId(null);
+            setShowManageAdvertisement(false); setEditingAdBlockId(null);
+          }}
+          onManageSubAccount={() => {
+            setActiveTab(null);
+            setShowManageSubAccount(true);
+            setShowManageReturns(false); setShowBulkPrice(false); setShowBulkQty(false); setSelectedReturnId(null);
+            setShowSellingFees(false); setEditingSubAccount(null);
+            setShowProductImport(false); setShowProductExport(false);
+            setShowManageRequestForQuote(false); setSelectedQuoteId(null);
+            setShowManageAdvertisement(false); setEditingAdBlockId(null);
+          }}
+          onProductImport={() => {
+            setActiveTab('products');
+            setShowProductImport(true);
+            setShowManageReturns(false); setShowBulkPrice(false); setShowBulkQty(false); setSelectedReturnId(null);
+            setShowSellingFees(false); setShowManageSubAccount(false); setEditingSubAccount(null);
+            setShowProductExport(false);
+            setShowManageRequestForQuote(false); setSelectedQuoteId(null);
+            setShowManageAdvertisement(false); setEditingAdBlockId(null);
+          }}
+          onProductExport={() => {
+            setActiveTab('products');
+            setShowProductExport(true);
+            setShowManageReturns(false); setShowBulkPrice(false); setShowBulkQty(false); setSelectedReturnId(null);
+            setShowSellingFees(false); setShowManageSubAccount(false); setEditingSubAccount(null);
+            setShowProductImport(false);
+            setShowManageRequestForQuote(false); setSelectedQuoteId(null);
+            setShowManageAdvertisement(false); setEditingAdBlockId(null);
+          }}
+          onManageRequestForQuote={() => {
+            setActiveTab(null);
+            setShowManageRequestForQuote(true);
+            setShowManageReturns(false); setShowBulkPrice(false); setShowBulkQty(false); setSelectedReturnId(null);
+            setShowSellingFees(false); setShowManageSubAccount(false); setEditingSubAccount(null);
+            setShowProductImport(false); setShowProductExport(false); setSelectedQuoteId(null);
+            setShowManageAdvertisement(false); setEditingAdBlockId(null);
+          }}
+          onManageAdvertisement={() => {
+            setActiveTab(null);
+            setShowManageAdvertisement(true);
+            setShowManageRequestForQuote(false); setShowManageReturns(false);
+            setShowBulkPrice(false); setShowBulkQty(false); setSelectedReturnId(null);
+            setShowSellingFees(false); setShowManageSubAccount(false); setEditingSubAccount(null);
+            setShowProductImport(false); setShowProductExport(false); setSelectedQuoteId(null); setEditingAdBlockId(null);
+          }}
+          onBulkPrice={() => {
+            setActiveTab('products');
+            setShowBulkPrice(true);
+            setShowBulkQty(false); setShowManageAdvertisement(false); setShowManageRequestForQuote(false);
+            setShowManageReturns(false); setSelectedReturnId(null);
+            setShowSellingFees(false); setShowManageSubAccount(false); setEditingSubAccount(null);
+            setShowProductImport(false); setShowProductExport(false); setSelectedQuoteId(null); setEditingAdBlockId(null);
+          }}
+          onBulkQty={() => {
+            setActiveTab('products');
+            setShowBulkQty(true);
+            setShowBulkPrice(false); setShowManageAdvertisement(false); setShowManageRequestForQuote(false);
+            setShowManageReturns(false); setSelectedReturnId(null);
+            setShowSellingFees(false); setShowManageSubAccount(false); setEditingSubAccount(null);
+            setShowProductImport(false); setShowProductExport(false); setSelectedQuoteId(null); setEditingAdBlockId(null);
+          }}
+          onManageOrders={() => {
+            setActiveTab('orders');
+            setShowOrders(true);
+            setShowTransactions(false); setShowCreditCard(false); setShowReviews(false);
+            setShowSupport(false); setShowHelp(false); setShowMembership(false); setShowPromotion(false); setShowSettings(false);
+            setShowBulkPrice(false); setShowBulkQty(false); setShowManageReturns(false); setSelectedReturnId(null);
+            setShowSellingFees(false); setShowManageSubAccount(false); setEditingSubAccount(null);
+            setShowProductImport(false); setShowProductExport(false);
+            setShowManageRequestForQuote(false); setSelectedQuoteId(null);
+            setShowManageAdvertisement(false); setEditingAdBlockId(null);
+          }}
+          onManagePayments={() => {
+            setActiveTab('payments');
+            setShowOrders(false); setShowTransactions(true); setShowCreditCard(false); setShowReviews(false);
+            setShowSupport(false); setShowHelp(false); setShowMembership(false); setShowPromotion(false); setShowSettings(false);
+            setShowBulkPrice(false); setShowBulkQty(false); setShowManageReturns(false); setSelectedReturnId(null);
+            setShowSellingFees(false); setShowManageSubAccount(false); setEditingSubAccount(null);
+            setShowProductImport(false); setShowProductExport(false);
+            setShowManageRequestForQuote(false); setSelectedQuoteId(null);
+            setShowManageAdvertisement(false); setEditingAdBlockId(null);
+          }}
+          onManageCreditCard={() => {
+            setActiveTab('payments');
+            setShowOrders(false); setShowTransactions(false); setShowCreditCard(true); setShowReviews(false);
+            setShowSupport(false); setShowHelp(false); setShowMembership(false); setShowPromotion(false); setShowSettings(false);
+            setShowBulkPrice(false); setShowBulkQty(false); setShowManageReturns(false); setSelectedReturnId(null);
+            setShowSellingFees(false); setShowManageSubAccount(false); setEditingSubAccount(null);
+            setShowProductImport(false); setShowProductExport(false);
+            setShowManageRequestForQuote(false); setSelectedQuoteId(null);
+            setShowManageAdvertisement(false); setEditingAdBlockId(null);
+          }}
+          onFeedbacks={() => {
+            setActiveTab('products');
+            setShowOrders(false); setShowTransactions(false); setShowCreditCard(false); setShowReviews(true);
+            setShowSupport(false); setShowHelp(false); setShowMembership(false); setShowPromotion(false); setShowSettings(false);
+            setShowBulkPrice(false); setShowBulkQty(false); setShowManageReturns(false); setSelectedReturnId(null);
+            setShowSellingFees(false); setShowManageSubAccount(false); setEditingSubAccount(null);
+            setShowProductImport(false); setShowProductExport(false);
+            setShowManageRequestForQuote(false); setSelectedQuoteId(null);
+            setShowManageAdvertisement(false); setEditingAdBlockId(null);
+          }}
+          onMembership={() => {
+            setActiveTab(null);
+            setShowOrders(false); setShowTransactions(false); setShowCreditCard(false); setShowReviews(false);
+            setShowSupport(false); setShowHelp(false); setShowMembership(true); setShowPromotion(false); setShowSettings(false);
+            setShowBulkPrice(false); setShowBulkQty(false); setShowManageReturns(false); setSelectedReturnId(null);
+            setShowSellingFees(false); setShowManageSubAccount(false); setEditingSubAccount(null);
+            setShowProductImport(false); setShowProductExport(false);
+            setShowManageRequestForQuote(false); setSelectedQuoteId(null);
+            setShowManageAdvertisement(false); setEditingAdBlockId(null);
+          }}
+          onPromotion={() => {
+            setActiveTab(null);
+            setShowOrders(false); setShowTransactions(false); setShowCreditCard(false); setShowReviews(false);
+            setShowSupport(false); setShowHelp(false); setShowMembership(false); setShowPromotion(true); setShowSettings(false);
+            setShowBulkPrice(false); setShowBulkQty(false); setShowManageReturns(false); setSelectedReturnId(null);
+            setShowSellingFees(false); setShowManageSubAccount(false); setEditingSubAccount(null);
+            setShowProductImport(false); setShowProductExport(false);
+            setShowManageRequestForQuote(false); setSelectedQuoteId(null);
+            setShowManageAdvertisement(false); setEditingAdBlockId(null);
+          }}
+          onSettings={() => {
+            setActiveTab(null);
+            setShowOrders(false); setShowTransactions(false); setShowCreditCard(false); setShowReviews(false);
+            setShowSupport(false); setShowHelp(false); setShowMembership(false); setShowPromotion(false); setShowSettings(true);
+            setShowBulkPrice(false); setShowBulkQty(false); setShowManageReturns(false); setSelectedReturnId(null);
+            setShowSellingFees(false); setShowManageSubAccount(false); setEditingSubAccount(null);
+            setShowProductImport(false); setShowProductExport(false);
+            setShowManageRequestForQuote(false); setSelectedQuoteId(null);
+            setShowManageAdvertisement(false); setEditingAdBlockId(null);
+          }}
+          onReport={() => {
+            setActiveTab('report');
+          }}
+          onPhotoshoot={() => {
+            setActiveTab(null);
+            setShowPhotoshoot(true);
+          }}
+        />
 
-        {showManageAdvertisement ? (
+        {showPhotoshoot ? (
+          <PhotoshootPage />
+        ) : showManageAdvertisement ? (
           editingAdBlockId !== null ? (
             <AdvertisementEditPage
               blockId={editingAdBlockId === -1 ? undefined : editingAdBlockId}
@@ -699,10 +904,10 @@ function App() {
           }} />
         ) : activeTab === 'report' ? (
           <ReportsPage />
-        ) : activeTab === 'photoshoot' ? (
-          <PhotoshootPage />
+        ) : activeTab === 'marketing' ? (
+          <MarketingPage />
         ) : activeTab === 'my-business' ? (
-          <div className="flex-1 bg-gray-50 overflow-auto">
+          <div className="flex-1 bg-gray-50">
             <div className="px-6 py-4">
               <ProductActionBar onManageProducts={() => setActiveTab('products')} />
 
@@ -788,8 +993,53 @@ function App() {
               </div>
             </div>
           </div>
-        )}
+        )
+        }
       </main>
+
+      {/* Floating bottom-right Actions button */}
+      <div className="fixed bottom-6 right-6 z-30">
+        {showActionsPopup && (
+          <div className="absolute bottom-14 right-0 w-72 bg-white rounded-lg shadow-2xl border border-gray-200 overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-3 bg-[#232f3e] text-white">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-semibold">Actions</span>
+                <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-600 rounded">
+                  1
+                </span>
+              </div>
+              <button
+                onClick={() => setShowActionsPopup(false)}
+                className="hover:text-gray-300 transition-colors text-lg leading-none"
+              >
+                ×
+              </button>
+            </div>
+            <div className="px-4 py-4">
+              <div className="text-center py-6 bg-gray-50 rounded">
+                <p className="text-xs font-medium text-gray-900 mb-1">No actions required</p>
+                <p className="text-xs text-gray-600 px-3">
+                  There are no actions in this workspace. However, you can use the filter above to check for other actions.
+                </p>
+              </div>
+            </div>
+          </div>
+        )
+        }
+        <button
+          onClick={() => setShowActionsPopup(!showActionsPopup)}
+          className="relative w-12 h-12 bg-[#232f3e] text-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-700 transition-colors"
+          title="Actions"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+          <span className="absolute -top-1 -right-1 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-600 rounded-full">
+            1
+          </span>
+        </button>
+      </div>
     </div>
   );
 }
