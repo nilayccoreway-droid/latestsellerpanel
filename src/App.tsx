@@ -99,7 +99,6 @@ function App() {
   const [showNotificationPanel, setShowNotificationPanel] = useState(false);
   const [showActionsPopup, setShowActionsPopup] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [showPhotoshoot, setShowPhotoshoot] = useState(false);
 
   useEffect(() => {
     fetchDashboardData();
@@ -199,6 +198,7 @@ function App() {
     { id: 'orders' as TabType, title: 'Orders', subtitle: 'Open Orders', value: '--' },
     { id: 'payments' as TabType, title: 'Payments', subtitle: 'Proceeds (06/02-Today)', value: '¥0' },
     { id: 'report' as TabType, title: 'Report', subtitle: 'Monthly Report', value: '--' },
+    { id: 'photoshoot' as TabType, title: 'Photoshoot', subtitle: 'Scheduled', value: '--' },
     { id: 'marketing' as TabType, title: 'Marketing', subtitle: 'Campaigns & Ads', value: '--' },
   ];
 
@@ -590,8 +590,7 @@ function App() {
           setActiveTab('report');
         }}
         onPhotoshoot={() => {
-          setActiveTab(null);
-          setShowPhotoshoot(true);
+          setActiveTab('photoshoot');
         }}
       />
 
@@ -623,7 +622,6 @@ function App() {
           setSelectedQuoteId(null);
           setShowManageAdvertisement(false);
           setEditingAdBlockId(null);
-          setShowPhotoshoot(false);
         }}
         tabs={tabs}
       />
@@ -788,12 +786,11 @@ function App() {
             setActiveTab('report');
           }}
           onPhotoshoot={() => {
-            setActiveTab(null);
-            setShowPhotoshoot(true);
+            setActiveTab('photoshoot');
           }}
         />
 
-        {showPhotoshoot ? (
+        {activeTab === 'photoshoot' ? (
           <PhotoshootPage />
         ) : showManageAdvertisement ? (
           editingAdBlockId !== null ? (

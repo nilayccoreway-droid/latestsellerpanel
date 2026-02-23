@@ -1,7 +1,7 @@
 import { CheckCircle } from 'lucide-react';
 import { useState } from 'react';
 
-export type TabType = 'my-business' | 'products' | 'orders' | 'payments' | 'report' | 'marketing';
+export type TabType = 'my-business' | 'products' | 'orders' | 'payments' | 'report' | 'photoshoot' | 'marketing';
 
 interface Tab {
   id: TabType;
